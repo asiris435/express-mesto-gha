@@ -22,4 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(router);
 
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Страница не найдена.' });
+});
+
 app.listen(PORT);
