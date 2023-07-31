@@ -22,11 +22,8 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   if (req.params.userId.length === 24) {
     User.findById(req.params.userId)
+      .orFail()
       .then((user) => {
-        if (!user) {
-          res.status(404).send({ message: 'Пользователь не найден.' });
-          return;
-        }
         res.send(user);
       })
       .catch(() => res.status(404).send({ message: 'Пользователь не найден.' }));

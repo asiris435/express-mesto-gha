@@ -28,11 +28,8 @@ const getCards = (req, res) => {
 const deleteCard = (req, res) => {
   if (req.params.cardId.length === 24) {
     Card.findByIdAndRemove(req.params.cardId)
-      .then((card) => {
-        if (!card) {
-          res.status(404).send({ message: 'Карточка не найдена.' });
-          return;
-        }
+      .orFail()
+      .then(() => {
         res.send({ message: 'Карточка удалена.' });
       })
       .catch(() => res.status(404).send({ message: 'Карточка не найдена.' }));
@@ -45,11 +42,8 @@ const likedCard = (req, res) => {
   if (req.params.cardId.length === 24) {
     Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
       .populate(['owner', 'likes'])
+      .orFail()
       .then((card) => {
-        if (!card) {
-          res.status(404).send({ message: 'Карточка не найдена.' });
-          return;
-        }
         res.send(card);
       })
       .catch(() => res.status(404).send({ message: 'Карточка не найдена.' }));
@@ -62,11 +56,8 @@ const dislikedCard = (req, res) => {
   if (req.params.cardId.length === 24) {
     Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
       .populate(['owner', 'likes'])
+      .orFail()
       .then((card) => {
-        if (!card) {
-          res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
-          return;
-        }
         res.send(card);
       })
       .catch(() => res.status(404).send({ message: 'Карточка с указанным _id не найдена.' }));
