@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-const router = require('./routes');
 const { errors } = require('celebrate');
+const router = require('./routes');
 const errorHandler = require('./middlewares/error-handler');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
@@ -19,9 +19,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet());
 
-app.use(router);
-
 app.use(errors);
+
+app.use(router);
 
 app.use(errorHandler);
 
