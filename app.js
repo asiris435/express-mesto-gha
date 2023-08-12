@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const router = require('./routes');
+const { errors } = require('celebrate');
+const errorHandler = require('./middlewares/error-handler');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
@@ -12,16 +14,15 @@ mongoose.connect(DB_URL, {
 
 const app = express();
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64c603d18c6e56d1e62cabc5',
-  };
-  next();
-});
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(helmet());
+
 app.use(router);
+
+app.use(errors);
+
+app.use(errorHandler);
 
 app.listen(PORT);
