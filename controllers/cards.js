@@ -39,6 +39,7 @@ const getCards = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .orFail()
     .then((card) => {
       if (!card.owner.equals(req.user._id)) {
         next(new ForbiddenError('Карточка другого пользователя.'));
@@ -59,7 +60,7 @@ const deleteCard = (req, res, next) => {
         });
     })
     .catch((err) => {
-      if (err.name === 'TypeError') {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
         next(new NotFoundError('Карточка не найдена.'));
       } else {
         next(err);
