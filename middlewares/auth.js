@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { SECRET_KEY = 'KAA-cohort-66' } = process.env;
-const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || authorization.startsWith('Bearer ')) {
-    throw new UnauthorizedError('Необходима авторизация.');
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new UnauthorizedError('Необходима авторизация');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -16,9 +16,9 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    throw new UnauthorizedError('Необходима авторизация.');
+    throw new UnauthorizedError('Необходима авторизация');
   }
-  req.user = payload;
 
+  req.user = payload;
   next();
 };

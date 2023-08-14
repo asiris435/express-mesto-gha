@@ -1,8 +1,8 @@
 const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('http2').constants;
 const mongoose = require('mongoose');
 const Card = require('../models/card');
-const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 const createCard = (req, res, next) => {
@@ -15,7 +15,7 @@ const createCard = (req, res, next) => {
         .then((data) => res.status(HTTP_STATUS_CREATED).send(data))
         .catch((err) => {
           if (err instanceof mongoose.Error.DocumentNotFoundError) {
-            next(new NotFoundError('Карточка не найдена.'));
+            next(new NotFoundError('Карточка с указанным _id не найдена.'));
           } else {
             next(err);
           }
@@ -33,7 +33,7 @@ const createCard = (req, res, next) => {
 const getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
-    .then((cards) => res.status(HTTP_STATUS_OK).send(cards))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
