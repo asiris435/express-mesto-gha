@@ -19,7 +19,7 @@ app.use(helmet());
 
 app.use('/', require('./routes/index'));
 
-app.use(errors);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT);
