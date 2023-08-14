@@ -11,8 +11,8 @@ router.use('/signin', signinRouter);
 router.use(auth);
 router.use('/users', userRouter);
 router.use('/cards', cardRouter);
-router.use('*', (req, res) => {
-  res.status(NotFoundError).send({ message: 'Страница не найдена.' });
+router.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена.'));
 });
 
 module.exports = router;
