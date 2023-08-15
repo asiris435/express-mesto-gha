@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const router = require('./routes');
 const errorHandler = require('./middlewares/error-handler');
@@ -14,6 +15,12 @@ mongoose.connect(DB_URL, {
 
 const app = express();
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());

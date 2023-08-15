@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const { urlRegex, emailRegex } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator(url) {
-        return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(url);
+        return urlRegex.test(url);
       },
       message: 'Неправильный URL.',
     },
@@ -31,7 +32,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator(email) {
-        return /^\S+@\S+\.\S+$/.test(email);
+        return emailRegex.test(email);
       },
       message: 'Неправильный email.',
     },
